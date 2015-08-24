@@ -29,7 +29,7 @@ $logs = db_array("SELECT *, "
 
 <h2>Лог запросов к серверу</h2>
 <hr />
-<table>
+<table class="display" cellspacing="0" width="100%">
     <thead>
         <tr>
             <th>ID</th>

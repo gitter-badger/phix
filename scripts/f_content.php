@@ -2,11 +2,35 @@
 
 /* ФУНКЦИИ РАБОТЫ С ТЕКСТОВЫМ КОНТЕНТОМ */
 
-// Рендер виджета с передачей массива данных внутрь него
-function r($widget_path, $v = false) {
+// Вставка выполняемого кода или виджета с передачей массива данных внутрь него
+// Переданный массив данных доступен внутри виджета как массив $v
+// Если передан не массив, а единственная переменная, то она доступна как $v, так и как $content
+// Формат файла - строго .php (окончание '.php' при вызове функции можно опустить)
+function execute($widget_path, $v = false) {
     global $page, $app, $self;
+    $type = substr($widget_path, (strlen($widget_path) - 4), 4);
+    if ($type != '.php') $widget_path = trim($widget_path) . '.php';
     if (! is_array($v)) $content = $v;
-    require "/templates/$widget_path.php";
+    $full_path = MC_ROOT . '/templates/' . $widget_path;
+    if ($app['mode'] == 'debug') require $full_path;
+    else @require $full_path;
+}
+
+// Рендер файла с передачей массива данных внутрь него
+// Значения в переданном ассоциативном массиве заменяют вставки [[name]] в файле, где name - имя ключа массива
+// т.е. если в переданном массиве $array['foo'] = '123', то [[foo]] при рендеринге будет заменено на 123.
+// Формат (расширение) файла может быть любой - js, html и пр.
+function render($file_path, $v = []) {
+    global $page, $app, $self;
+    if (strpos($file_path, '.') === false) $file_path = trim($file_path) . '.php';
+    $file_content = file_get_contents(MC_ROOT . '/templates/' . $file_path);
+    // Обработка вставок вида [[name]]
+    preg_match_all('/\/?\*?\[\[\s+([\w-_]+)\s+\]\]\*?\/?/i', $file_content, $matches);
+    //dd($matches);
+    if (!empty($matches[1]))
+        foreach ($matches[1] as $num => $name)
+            $file_content = str_replace($matches[0][$num], $v[$name], $file_content);
+    return $file_content;
 }
 
 // Вывод дампа переменной и остановка выполнения программы

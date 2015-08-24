@@ -15,6 +15,7 @@
             <ul class="nav navbar-nav">
                 <li class="<?= ($self == 'index.php') ? 'active' : '' ?>"><a href="/">Главная</a></li>
                 <li class="<?= ($self == 'log.php') ? 'active' : '' ?>"><a href="/log">Лог</a></li>
+                <li class="<?= ($self == 'crud.php') ? 'active' : '' ?>"><a href="/crud">CRUD</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>

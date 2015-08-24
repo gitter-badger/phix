@@ -4,8 +4,58 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "65039e8bf509e3ad1b727dc41c41d979",
+    "hash": "046267e8d3d3e96f2133c1515596fabb",
     "packages": [
+        {
+            "name": "blueimp/jquery-file-upload",
+            "version": "9.11.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vkhramtsov/jQuery-File-Upload.git",
+                "reference": "e6236257b91f4824235ec6941f22878eb9bb1ed2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vkhramtsov/jQuery-File-Upload/zipball/e6236257b91f4824235ec6941f22878eb9bb1ed2",
+                "reference": "e6236257b91f4824235ec6941f22878eb9bb1ed2",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Tschan",
+                    "homepage": "https://blueimp.net"
+                }
+            ],
+            "description": "File Upload widget for jQuery.",
+            "homepage": "https://github.com/blueimp/jQuery-File-Upload",
+            "keywords": [
+                "bootstrap",
+                "chunk",
+                "cross-domain",
+                "cross-site",
+                "drag",
+                "drop",
+                "file",
+                "gae",
+                "go",
+                "jquery",
+                "multiple",
+                "php",
+                "preview",
+                "progress",
+                "python",
+                "resume",
+                "selection",
+                "upload",
+                "widget"
+            ],
+            "time": "2015-08-11 06:07:24"
+        },
         {
             "name": "components/font-awesome",
             "version": "4.4.0",
@@ -107,6 +157,87 @@
             "description": "DataTables is a plug-in for the jQuery Javascript library. It is a highly flexible tool, based upon the foundations of progressive enhancement, which will add advanced interaction controls to any HTML table.",
             "homepage": "http://www.datatables.net/",
             "time": "2015-08-12 19:17:46"
+        },
+        {
+            "name": "monstrum/jcrop",
+            "version": "v2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/monstrum/Jcrop.git",
+                "reference": "45d0c0677ff5a9c8625e4aafbb29b7b423819ca8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/monstrum/Jcrop/zipball/45d0c0677ff5a9c8625e4aafbb29b7b423819ca8",
+                "reference": "45d0c0677ff5a9c8625e4aafbb29b7b423819ca8",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matias Meno",
+                    "email": "m@tias.me",
+                    "homepage": "http://www.matiasmeno.com"
+                }
+            ],
+            "description": "Image Editor in standard jQuery plugin Structure. Fork from https://github.com/tapmodo/Jcrop",
+            "homepage": "https://github.com/monstrum/Jcrop",
+            "keywords": [
+                "crop",
+                "image drag and crop",
+                "thumbnail",
+                "zoom and crop"
+            ],
+            "time": "2015-07-26 12:31:08"
+        },
+        {
+            "name": "mrclay/minify",
+            "version": "2.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mrclay/minify.git",
+                "reference": "3c11ba8232a2155a1a29552aafc528be5fb0a662"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mrclay/minify/zipball/3c11ba8232a2155a1a29552aafc528be5fb0a662",
+                "reference": "3c11ba8232a2155a1a29552aafc528be5fb0a662",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pcre": "*",
+                "php": ">=5.2.1"
+            },
+            "require-dev": {
+                "tubalmartin/cssmin": "~2.4.8"
+            },
+            "suggest": {
+                "tubalmartin/cssmin": "Support minify with CSSMin (YUI PHP port)"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "min/lib/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Stephen Clay",
+                    "email": "steve@mrclay.org",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Minify is a PHP5 app that helps you follow several rules for client-side performance. It combines multiple CSS or Javascript files, removes unnecessary whitespace and comments, and serves them with gzip encoding and optimal client-side cache headers",
+            "homepage": "http://code.google.com/p/minify/",
+            "time": "2014-10-30 22:58:02"
         },
         {
             "name": "twbs/bootstrap",

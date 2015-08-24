@@ -19,13 +19,13 @@ $articles = [
         'desc' => 'Краткое содержание третьей статьи',
     ],
 ];
+$page['success_msg'] = 'Проверка успешного сообщения';
+
 
 /* -------------------------- ОТОБРАЖЕНИЕ ------------ */ ob_start(); ?>
 
 <h2>Главная страница</h2>
 <hr />
-
-<? foreach ($articles as $article) r('articles/widget', $article); ?>
-
+<? foreach ($articles as $article) e('articles/widget', $article); ?>
 
 <?php require MC_ROOT . '/scripts/render_view.php';

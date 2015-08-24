@@ -3,6 +3,9 @@
         "twbs/bootstrap": "^3.3",
         "components/jquery": "^2.1",
         "components/font-awesome": "^4.4",
-        "datatables/datatables": "^1.10"
+        "datatables/datatables": "^1.10",
+        "monstrum/jcrop": "^2.0",
+        "blueimp/jquery-file-upload": "^9.11",
+        "mrclay/minify": "^2.2"
     }
 }
