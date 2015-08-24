@@ -5,6 +5,7 @@
 // Рендер виджета с передачей массива данных внутрь него
 function r($widget_path, $v = false) {
     global $page, $app, $self;
+    if (! is_array($v)) $content = $v;
     require "/templates/$widget_path.php";
 }
 

@@ -7,5 +7,5 @@ ob_end_clean(); //сбрасываем и выключаем буфер
 //header("Content-Type: text/html; charset=UTF-8");
 
 // Рендеринг шаблона страницы
-require MC_ROOT . "/templates/" . $page['template'] . ".php";
+r( $page['template'], $content );
 mysql_close();
