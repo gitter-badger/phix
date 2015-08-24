@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <? require MC_ROOT . '/templates/head_content.php'; ?>
+        <? r('head_content') ?>
     </head>
 
     <body>
-        <? require MC_ROOT . '/templates/navbar.php'; ?>
+        <? r('navbar') ?>
 
         <div class="container">
             <?= $content ?>

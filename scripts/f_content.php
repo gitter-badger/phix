@@ -4,6 +4,7 @@
 
 // Рендер виджета с передачей массива данных внутрь него
 function r($widget_path, $v = false) {
+    global $page, $app, $self;
     require "/templates/$widget_path.php";
 }
 
@@ -31,7 +32,7 @@ function resource($path, $type = false) {
                 if (array_search($path, $page['js']) === false) $page['js'][] = $path; break;
 
             default: /* Подключение скрипта из переменной, а не в виде файла */
-                $page['js_extra'] .= "$path\r\n";
+                $page['js_raw'] .= "$path\r\n";
         }
     }
 }
@@ -78,9 +79,9 @@ function js_resources() {
     $script_path = "/assets/js/" . substr($self, 0, strlen($self) - 4) . ".js";
     if (file_exists( MC_ROOT . $script_path )) $r .= "<script src=\"$script_path\"></script>\r\n";
     // js, не подключаемый из файла, а генерируемый "на лету"
-    if (!empty($page['js_extra'])) {
+    if (!empty($page['js_raw'])) {
         $r .= '<script type="text/javascript">' . "\r\n";
-        $r .= $page['js_extra'];
+        $r .= $page['js_raw'];
         $r .= "</script>\r\n";
     }
     return $r;
