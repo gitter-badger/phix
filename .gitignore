@@ -1,0 +1,8 @@
+# PhpStorm directory
+.idea/
+
+# Config file
+# config.php
+
+# non-use folders
+vendor/

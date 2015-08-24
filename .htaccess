@@ -1,0 +1,6 @@
+AddDefaultCharset utf-8  
+AddCharset utf-8 *
+ErrorDocument 404 /error-404.php
+
+RewriteEngine On
+RewriteRule ^(\w+)$ $1.php [NC]
