@@ -3,6 +3,7 @@
 $page['title'] = 'Главная';
 $page['desc'] = 'Главная страница сайта';
 
+
 /* ---------------------- КОНТРОЛЛЕР СТРАНИЦЫ ----------------------- */
 $articles = [
     0 => [
@@ -23,6 +24,7 @@ $articles = [
 
 <h2>Главная страница</h2>
 <hr />
+
 <? foreach ($articles as $article) r('articles/widget', $article); ?>
 
 

@@ -11,6 +11,6 @@
             <?= $content ?>
         </div><!-- /.container -->
 
-        <? require MC_ROOT . '/templates/page_end.php'; ?>
+        <?= js_resources() ?>
     </body>
 </html>

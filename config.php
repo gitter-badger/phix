@@ -38,6 +38,7 @@ $page = [
         'components/jquery/jquery.min.js',
         'twbs/bootstrap/dist/js/bootstrap.min.js',
     ],
+    'js_extra' => '', /* в этой переменной хранится js, не подключаемый из файла, а генерируемый "на лету" */
 ];
 
 // Подключение к БД и основных функций для работы с ней

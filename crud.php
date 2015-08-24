@@ -1,20 +1,9 @@
 <?php require_once 'config.php';
 /* ----------------------- ПАРАМЕТРЫ СТРАНИЦЫ ----------------------- */
-$page['title'] = 'Лог';
-$page['desc'] = 'Лог сервера';
-resource([
-    'datatables/datatables/media/css/jquery.dataTables.min.css',
-    'datatables/datatables/media/js/jquery.dataTables.min.js',
-<<<JS
-    $(document).ready(function() {
-        $('table').DataTable( {
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"
-            }
-        } );
-    } );
-JS
-]);
+$page['title'] = 'CRUD - редактирование';
+$page['desc'] = 'Редактирование данных в табличной форме (CRUD)';
+$page['css'][] = 'datatables/datatables/media/css/jquery.dataTables.min.css';
+$page['js'][] = 'datatables/datatables/media/js/jquery.dataTables.min.js';
 
 /* ---------------------- КОНТРОЛЛЕР СТРАНИЦЫ ----------------------- */
 
