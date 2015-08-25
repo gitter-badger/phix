@@ -8,16 +8,19 @@ $yandex_map_need = false;
 $dadata_need = false;
 $page['error_msg'] = '';
 
+// Дефолтные настройки
+if (empty($page['crud_editor']['primary_key'])) $page['crud_editor']['primary_key'] = 'id';
+
 function add_error ($field_name, $error_type) {
-	global $page, $fields;
+	global $page;
 	switch ($error_type) {
-		case 'empty': $err = "Не заполнено обязательное поле: " . $fields[$field_name]['desc']; break;
-		case 'error': $err = "Проверьте правильность заполнения поля: " . $fields[$field_name]['desc']; break;
-		case 'minlength': $err = "Слишком короткое значение поля '" . $fields[$field_name]['desc'] . "'! Вы должны ввести не менее " . $fields[$field_name]['minlength'] . " симв."; break;
+		case 'empty': $err = "Не заполнено обязательное поле: " . $page['crud_editor']['fields'][$field_name]['desc']; break;
+		case 'error': $err = "Проверьте правильность заполнения поля: " . $page['crud_editor']['fields'][$field_name]['desc']; break;
+		case 'minlength': $err = "Слишком короткое значение поля '" . $page['crud_editor']['fields'][$field_name]['desc'] . "'! Вы должны ввести не менее " . $page['crud_editor']['fields'][$field_name]['minlength'] . " симв."; break;
 		default: $err = $error_type; break;
 	}
 	$page['error_msg'] .= "$err<br />";
-	$fields[$field_name]['error_msg'] .= "$err<br />";
+	$page['crud_editor']['fields'][$field_name]['error_msg'] .= "$err<br />";
     f_log($err, 'EDITOR');
 }
 
@@ -28,11 +31,11 @@ if ($data_in['act'] == 'sql' && $app['mode'] == 'debug') require MC_ROOT . '/scr
 // Действия
 if ($data_in['act'] == 'del') {
 	// Удаление элемента
-	if ( db_request("DELETE FROM `$table` WHERE `$row_id`='".$data_in['id']."' LIMIT 1") ) { header("Location: $self?msg=3"); exit; }
-	else $page['error_msg'] .= $messages['delete_error'] . '<br />';
+	if ( db_request("DELETE FROM `{$page['crud_editor']['table']}` WHERE `{$page['crud_editor']['primary_key']}`='".$data_in['id']."' LIMIT 1") ) { header("Location: $self?msg=3"); exit; }
+	else $page['error_msg'] .= $page['crud_editor']['messages']['delete_error'] . '<br />';
 } else if ($data_in['act'] == 'add') {
 	// Обработка входных данных согласно свойствам полей
-	foreach ($fields as $f_name => $f_options) {
+	foreach ($page['crud_editor']['fields'] as $f_name => $f_options) {
 		if ($f_options['type'] == 'digit') $data_in[$f_name] = intval ($data_in[$f_name]);
 		if (empty($data_in[$f_name])) {
 			// Если это обязательное поле - высвечиваем ошибку
@@ -63,7 +66,7 @@ if ($data_in['act'] == 'del') {
 		// Часть запроса, отвечающая за сохранение полей
 		$fields_query_arr = Array();
 		$timestamp_exists = false;
-		foreach ($fields as $f_name => $f_options) {
+		foreach ($page['crud_editor']['fields'] as $f_name => $f_options) {
 			if ($f_options['tag'] == 'list') continue;
 			if ($f_options['tag'] == 'checkboxes') {
                 if (!is_array($data_in[$f_name]) || !count($data_in[$f_name]) ) $fields_query_arr[] = "`$f_name`=''";
@@ -79,42 +82,45 @@ if ($data_in['act'] == 'del') {
 		if (empty($data_in['id'])) {
 			// Добавление новой записи
             if (!empty($author)) $fields_query_arr[] = "`$author`='$enter_user'";
-            if ( db_request("INSERT INTO `$table` SET " . implode(", ", $fields_query_arr)) )
+            if ( db_request("INSERT INTO `{$page['crud_editor']['table']}` SET " . implode(", ", $fields_query_arr)) )
 				$header_msg = 1;
 				//@action_after_insert();
 		} else {
 			// Редактирование существующей записи
-			if ( db_request("UPDATE `$table` SET " . implode(", ", $fields_query_arr) . " 
-							WHERE `$row_id`='" . $data_in['id'] . "' LIMIT 1") )
+			if ( db_request("UPDATE `{$page['crud_editor']['table']}` SET " . implode(", ", $fields_query_arr) . " 
+							WHERE `{$page['crud_editor']['primary_key']}`='" . $data_in['id'] . "' LIMIT 1") )
 				$header_msg = 2;
 				//@action_after_edit();
 		}
 		if (!empty($header_msg)) {header("Location: $self?msg=$header_msg"); exit;}
-		else $page['error_msg'] .= $messages['save_error'] . '<br />';
+		else $page['error_msg'] .= $page['crud_editor']['messages']['save_error'] . '<br />';
 	}
 }
 if (!empty($data_in['id'])) {
 	// Подгрузка информации о редактируемом элементе
-	$el_data = db_row ("SELECT * FROM `$table` WHERE `$row_id`='".$data_in['id']."' LIMIT 1");
+	$el_data = db_row ("SELECT * FROM `{$page['crud_editor']['table']}` WHERE `{$page['crud_editor']['primary_key']}`='".$data_in['id']."' LIMIT 1");
 	$data_in = array_merge($data_in, $el_data);
 } else if (!empty($data_in['msg'])) {
 	// Высвечивание сообщение об успешности предыдущего действия по переадресации на список элементов
 	switch ($data_in['msg']) {
-		case 1: $page['success_msg'] = $messages['create_success']; break;
-		case 2: $page['success_msg'] = $messages['save_success']; break;
-		case 3: $page['success_msg'] = $messages['delete_success']; break;
+		case 1: $page['success_msg'] = $page['crud_editor']['messages']['create_success']; break;
+		case 2: $page['success_msg'] = $page['crud_editor']['messages']['save_success']; break;
+		case 3: $page['success_msg'] = $page['crud_editor']['messages']['delete_success']; break;
 	}
 }
 
 // Рендеринг скрипта инициализации datatable
 if ($act != "add" && $act != "new" && $act != "edit" && empty($data_in['id'])) {
     // Опция сортировки по нужной колонке
-    if ($sort_column) $datatable_options['order'] = "order: [[" . ($sort_column-1) . ", 'desc' ]],";
-    if ($display_length) $datatable_options['iDisplayLength'] = "iDisplayLength: $display_length,";
+    if ($page['crud_editor']['sort_column']) 
+        $datatable_options['order'] = "order: [[" . ($page['crud_editor']['sort_column']-1)
+                                    . ", '{$page['crud_editor']['sort_order']}' ]],";
+    if ($page['crud_editor']['display_length'])
+        $datatable_options['iDisplayLength'] = "iDisplayLength: {$page['crud_editor']['display_length']},";
     $page['js_raw'] .= r('crud_editor/js_raws/datatable.js', $datatable_options);
     // Флаг того, что редактор находится в режиме вывода списка
     $crud_editor_list_mode = true;
-} else foreach ($fields as $f_name => $f_options) { // Проход по всем заявленным полям
+} else foreach ($page['crud_editor']['fields'] as $f_name => $f_options) { // Проход по всем заявленным полям
 	if ($f_options['tag'] == 'picture') {
         resource([
             'monstrum/jcrop/dist/jquery.Jcrop.css',
@@ -155,3 +161,6 @@ if ($act != "add" && $act != "new" && $act != "edit" && empty($data_in['id'])) {
         ]);
     }
 }
+
+// Управление типом отображения в зависимости от текущего состояния редактора (список или редактирование)
+$page['view'] = ($crud_editor_list_mode) ? 'crud_editor/list_mode' : 'crud_editor/edit_mode';
