@@ -64,7 +64,7 @@ function resource($path, $type = false) {
 
 // Вывод списка подключаемых стилей
 function css_resources() {
-    global $page;
+    global $page, $app;
     $r = '';
     // Подключение дополнительных стилей для страницы, если они объявлены
     if (count($page['css'])) {

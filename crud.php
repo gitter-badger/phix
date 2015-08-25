@@ -32,20 +32,33 @@ $page['crud_editor'] = [
         'name' => [
             'desc' => 'Имя',
             'type' => 'text',
-            'required' => true
-        ],
-        'vk_id' => [
-            'desc' => 'id Вконтакте',
-            'type' => 'text',
+            'dadata' => ['type' => 'NAME'],
+            'required' => true,
         ],
         'address' => [
             'desc' => 'Адрес',
             'type' => 'text',
             'dadata' => [
                 'type' => 'ADDRESS',
-                'yandex_map' => true
+                'yandex_map' => true,
             ]
         ],
+        'company' => [
+            'desc' => 'Организация',
+            'type' => 'text',
+            'dadata' => ['type' => 'PARTY']
+        ],
+        'bank' => [
+            'desc' => 'Банк',
+            'type' => 'text',
+            'dadata' => ['type' => 'BANK']
+        ],
+        'email' => [
+            'desc' => 'Адрес электронной почты',
+            'type' => 'text',
+            'dadata' => ['type' => 'EMAIL']
+        ],
+
         /*    'avatar' => Array( 'desc' => 'Фотография',
                 'tag' => 'picture',
                 'type' => 'text',
@@ -55,7 +68,7 @@ $page['crud_editor'] = [
         'create_at' => [
             'desc' => 'Дата регистрации',
             'type' => 'timestamp',
-            'access_edit' => []
+            'access_edit' => [],
         ],
     ],
 
@@ -63,18 +76,17 @@ $page['crud_editor'] = [
     'table_list_fields' => [
         'id' => ['desc' => '#id'],
         'name' => ['desc' => 'Имя'],
-        'vk_id' => [
-            'desc' => 'Имя',
-            'value' => '<a href="http://vk.com/id{{vk_id}}">{{vk_id}}</a>',
-        ],
-        'create_at' => ['desc' => 'Дата регистрации'],
+        'address' => ['desc' => 'Адрес'],
+        'company' => ['desc' => 'Организация'],
+        'bank' => ['desc' => 'Банк'],
+        'email' => ['desc' => 'Электронная почта'],
     ],
 
     /*Запрос списка элементов*/
     'list_request' => "SELECT * FROM `users`",
 
     /*Скрыть кнопки редактирования*/
-    'hide_edit' => true,
+    'hide_edit' => false,
 
     /*Сортировка по колонке №*/
     'sort_column' => 1,

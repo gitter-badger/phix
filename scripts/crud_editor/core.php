@@ -137,16 +137,22 @@ if ($act != "add" && $act != "new" && $act != "edit" && empty($data_in['id'])) {
     }
 
 	if (!empty($f_options['dadata']['type'])) {
-        // На данной странице будет использован плагин Dadata
-        resource([
-            'https://dadata.ru/static/css/lib/suggestions-15.7.css',
-            'https://dadata.ru/static/js/lib/jquery.suggestions-15.7.min.js',
-        ]);
-        // Инициализация плагина для текущего поля
-        switch ($f_options['dadata']['type']) {
-            case 'ADDRESS':
-                $page['js_raw'] .= r('crud_editor/js_raws/dadata_address.js', ['f_name' => $f_name]); break;
-            // TODO: добавить остальные варианты Dadata-подсказок
+        // Разрешенные типы Dadata
+        $dadata_types = ['ADDRESS', 'NAME', 'PARTY', 'BANK', 'EMAIL'];
+        // Если указан один из поддерживаемых дадатой типов
+        if (array_search($f_options['dadata']['type'], $dadata_types) !== false) {
+            // На данной странице будет использован плагин Dadata
+            resource([
+                'https://dadata.ru/static/css/lib/suggestions-15.7.css',
+                'https://dadata.ru/static/js/lib/jquery.suggestions-15.7.min.js',
+            ]);
+            // Инициализация плагина для текущего поля
+            $dadata_options = [
+                'f_name' => $f_name,
+                'dadata_api_key' => $app['dadata_api_key'],
+            ];
+            $page['js_raw'] .= r('crud_editor/js_raws/dadata/' . strtolower($f_options['dadata']['type']) . '.js',
+                                $dadata_options);
         }
     }
     // На данной странице будет использовано API Яндекс-карт
