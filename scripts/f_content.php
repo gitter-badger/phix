@@ -1,5 +1,4 @@
 <?php
-require_once  MC_ROOT . '/min/utils.php';
 
 /* ФУНКЦИИ РАБОТЫ С ТЕКСТОВЫМ КОНТЕНТОМ */
 
@@ -67,8 +66,6 @@ function resource($path, $type = false) {
 function css_resources() {
     global $page, $app, $self;
     $r = '';
-    $all_css; //array will all css for minification    
-    
     // Подключение дополнительных стилей для страницы, если они объявлены
     if (count($page['css'])) {
         foreach ($page['css'] as $css) {
@@ -76,32 +73,14 @@ function css_resources() {
             else {
                 $css_path1 = "/assets/css/" . $css;
                 $css_path2 = "/vendor/" . $css;
-                if (file_exists( MC_ROOT . $css_path1 )) 
-                {
-                    //$r .= "<link rel=\"stylesheet\" href=\"$css_path1\">\r\n";
-                    $all_css[]='/' . $css_path1;
-                }
-                else if (file_exists( MC_ROOT . $css_path2 )) 
-                {
-                    //$r .= "<link rel=\"stylesheet\" href=\"$css_path2\">\r\n";
-                    $all_css[]='/' . $css_path2;
-                }
-                
+                if (file_exists( MC_ROOT . $css_path1 )) $r .= "<link rel=\"stylesheet\" href=\"$css_path1\">\r\n";
+                else if (file_exists( MC_ROOT . $css_path2 )) $r .= "<link rel=\"stylesheet\" href=\"$css_path2\">\r\n";
             }
         }
     }
     // Подключение индивидуального стиля с именем, равным имени страницы, если такой существует
     $css_path = "/assets/css/" . substr($self, 0, strlen($self) - 4) . ".css";
-    if (file_exists( MC_ROOT . $css_path )) 
-    {
-        //$r .= '<link rel="stylesheet" href="' . $css_path . '">';
-        $all_css[]='/' . $css_path;
-    }
-        
-    $cssUri = Minify_getUri($all_css); // a list of files
-
-    $r .= '<link rel="stylesheet" href="' . $cssUri . '">';
-    
+    if (file_exists( MC_ROOT . $css_path )) $r .= '<link rel="stylesheet" href="' . $css_path . '">';
     return $r;
 }
 
@@ -109,7 +88,6 @@ function css_resources() {
 function js_resources() {
     global $page, $self;
     $r = '';
-    $all_js; //array will all js for minification
     // Подключение дополнительных скриптов для страницы, если они объявлены
     if (count($page['js'])) {
         foreach ($page['js'] as $script) {
@@ -117,35 +95,19 @@ function js_resources() {
             else {
                 $script_path1 = "/assets/js/" . $script;
                 $script_path2 = "/vendor/" . $script;
-                if (file_exists(MC_ROOT . $script_path1)) 
-                {
-                    //$r .= "<script src=\"$script_path1\"></script>\r\n";
-                    $all_js[]='/' . $script_path1;
-                }
-                else if (file_exists(MC_ROOT . $script_path2)) 
-                {
-                    //$r .= "<script src=\"$script_path2\"></script>\r\n";
-                    $all_js[]='/' . $script_path2;
-                }
+                if (file_exists(MC_ROOT . $script_path1)) $r .= "<script src=\"$script_path1\"></script>\r\n";
+                else if (file_exists(MC_ROOT . $script_path2)) $r .= "<script src=\"$script_path2\"></script>\r\n";
             }
         }
     }
     // Подключение индивидуального скрипта с именем, равным имени страницы, если такой существует
     $script_path = "/assets/js/" . substr($self, 0, strlen($self) - 4) . ".js";
-    if (file_exists( MC_ROOT . $script_path )) 
-    {
-        $r .= "<script src=\"$script_path\"></script>\r\n";
-        $all_js[]='/' . $script_path;
-    }
+    if (file_exists( MC_ROOT . $script_path )) $r .= "<script src=\"$script_path\"></script>\r\n";
     // js, не подключаемый из файла, а генерируемый "на лету"
     if (!empty($page['js_raw'])) {
         $r .= '<script type="text/javascript">' . "\r\n";
         $r .= $page['js_raw'];
         $r .= "</script>\r\n";
     }
-    
-    $jsUri = Minify_getUri($all_js); // a list of files
-    $r .= '<script type="text/javascript" src="' . $jsUri . '"></script>\r\n';
-    
     return $r;
 }
