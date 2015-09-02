@@ -6,6 +6,7 @@
         "datatables/datatables": "^1.10",
         "monstrum/jcrop": "^2.0",
         "blueimp/jquery-file-upload": "^9.11",
-        "mrclay/minify": "^2.2"
+        "tubalmartin/cssmin":"^2.4",
+        "matthiasmullie/minify":"^1.3"
     }
 }

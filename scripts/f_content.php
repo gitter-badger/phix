@@ -1,5 +1,4 @@
 <?php
-require_once  MC_ROOT . '/min/utils.php';
 
 /* ФУНКЦИИ РАБОТЫ С ТЕКСТОВЫМ КОНТЕНТОМ */
 
@@ -67,7 +66,7 @@ function resource($path, $type = false) {
 function css_resources() {
     global $page, $app, $self;
     $r = '';
-    $all_css; //array will all css for minification    
+    $all_css=[]; //array will all css for minification    
     
     // Подключение дополнительных стилей для страницы, если они объявлены
     if (count($page['css'])) {
@@ -77,39 +76,50 @@ function css_resources() {
                 $css_path1 = "/assets/css/" . $css;
                 $css_path2 = "/vendor/" . $css;
                 if (file_exists( MC_ROOT . $css_path1 )) 
-                {
-                    //$r .= "<link rel=\"stylesheet\" href=\"$css_path1\">\r\n";
-                    $all_css[]='/' . $css_path1;
+                {                    
+                    if($app['mode']=='debug') $r .= "<link rel=\"stylesheet\" href=\"$css_path1\">\r\n";
+                    else 
+                    {
+                        $all_css['files'][]=$css_path1;
+                        $all_css['names'][]=$css;
+                    }
                 }
                 else if (file_exists( MC_ROOT . $css_path2 )) 
                 {
-                    //$r .= "<link rel=\"stylesheet\" href=\"$css_path2\">\r\n";
-                    $all_css[]='/' . $css_path2;
+                    if($app['mode']=='debug') $r .= "<link rel=\"stylesheet\" href=\"$css_path2\">\r\n";
+                    else 
+                    {
+                        $all_css['files'][]=$css_path2;
+                        $all_css['names'][]=$css;
+                    }
                 }
                 
             }
         }
     }
     // Подключение индивидуального стиля с именем, равным имени страницы, если такой существует
-    $css_path = "/assets/css/" . substr($self, 0, strlen($self) - 4) . ".css";
+    $self_css=substr($self, 0, strlen($self) - 4).".css";
+    $css_path = "/assets/css/" . $self_css ;
     if (file_exists( MC_ROOT . $css_path )) 
     {
-        //$r .= '<link rel="stylesheet" href="' . $css_path . '">';
-        $all_css[]='/' . $css_path;
+        if($app['mode']=='debug') $r .= '<link rel="stylesheet" href="' . $css_path . '">';
+        else 
+        {
+            $all_css['files'][]=$css_path;
+            $all_css['names'][]=$self_css;
+        }
     }
-        
-    $cssUri = Minify_getUri($all_css); // a list of files
-
-    $r .= '<link rel="stylesheet" href="' . $cssUri . '">';
-    
-    return $r;
+       
+   if($app['mode']=='debug') return $r;
+   
+   return '<link rel="stylesheet" href="'.minification($all_css,'css').'">';
 }
 
 // Вывод списка подключаемых JS
 function js_resources() {
-    global $page, $self;
+    global $page, $self, $app;
     $r = '';
-    $all_js; //array will all js for minification
+    $all_js=[]; //array will all js for minification
     // Подключение дополнительных скриптов для страницы, если они объявлены
     if (count($page['js'])) {
         foreach ($page['js'] as $script) {
@@ -119,23 +129,36 @@ function js_resources() {
                 $script_path2 = "/vendor/" . $script;
                 if (file_exists(MC_ROOT . $script_path1)) 
                 {
-                    //$r .= "<script src=\"$script_path1\"></script>\r\n";
-                    $all_js[]='/' . $script_path1;
+                    if($app['mode']=='debug') $r .= "<script src=\"$script_path1\"></script>\r\n";
+                    else 
+                    {
+                        $all_js['files'][]=$script_path1;
+                        $all_js['names'][]=$script;
+                    }
                 }
                 else if (file_exists(MC_ROOT . $script_path2)) 
                 {
-                    //$r .= "<script src=\"$script_path2\"></script>\r\n";
-                    $all_js[]='/' . $script_path2;
+                    if($app['mode']=='debug') $r .= "<script src=\"$script_path2\"></script>\r\n";
+                    else 
+                    {
+                        $all_js['files'][]=$script_path2;
+                        $all_js['names'][]=$script;
+                    }
                 }
             }
         }
     }
     // Подключение индивидуального скрипта с именем, равным имени страницы, если такой существует
-    $script_path = "/assets/js/" . substr($self, 0, strlen($self) - 4) . ".js";
+    $self_js = substr($self, 0, strlen($self) - 4) . ".js";
+    $script_path = "/assets/js/" . $self_js;
     if (file_exists( MC_ROOT . $script_path )) 
     {
-        $r .= "<script src=\"$script_path\"></script>\r\n";
-        $all_js[]='/' . $script_path;
+        if($app['mode']=='debug') $r .= "<script src=\"$script_path\"></script>\r\n";
+        else 
+        {
+            $all_js['files'][]=$script_path;
+            $all_js['names'][]=$self_js;
+        }
     }
     // js, не подключаемый из файла, а генерируемый "на лету"
     if (!empty($page['js_raw'])) {
@@ -144,8 +167,42 @@ function js_resources() {
         $r .= "</script>\r\n";
     }
     
-    $jsUri = Minify_getUri($all_js); // a list of files
-    $r .= '<script type="text/javascript" src="' . $jsUri . '"></script>\r\n';
-    
-    return $r;
+   if($app['mode']=='debug') return $r;
+   
+   return '<script type="text/javascript" src="'.minification($all_js,'js').'"></script>';
 }
+
+//self-made minification for both jss & css (with combine.php plugin)
+function minification($array,$type)
+{
+   global $app;
+    $new_name=implode('',$array['names']);
+   $minify_new_name=date('Ymd_Hms').'_'.md5($new_name).'.'.$type;
+
+    $filename=MC_ROOT.'/tmp/cache_table';
+    if($app['os_windows']) $filename=  str_replace ('/','\\',$filename);
+    $handle = fopen($filename,'c+b');
+    if(filesize($filename)>0)
+    {        
+        $contents = fread($handle, filesize($filename));
+        $cache_table = unserialize($contents);
+        if(array_key_exists ( $new_name , $cache_table ) !== false)
+        {
+            $minify_new_name = $cache_table[$new_name];
+        }
+        else {        
+            $cache_table[$new_name] = $minify_new_name; 
+            ftruncate($handle, 0);
+            rewind($handle);
+            fwrite($handle, serialize($cache_table));            
+        }        
+    }
+    else {        
+        fwrite($handle, serialize(array($new_name=>$minify_new_name)));
+    }
+    fclose($handle);
+    
+    if($type=='js') $type='javascript';
+    
+    return combine($array,$minify_new_name,$type);
+}        
