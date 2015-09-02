@@ -6,3 +6,6 @@
 
 # non-use folders
 vendor/
+
+#cache
+tmp/
